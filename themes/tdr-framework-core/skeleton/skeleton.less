@@ -1,0 +1,236 @@
+/*
+* Skeleton V1.1
+* Copyright 2011, Dave Gamache
+* www.getskeleton.com
+* Free to use under the MIT license.
+* http://www.opensource.org/licenses/mit-license.php
+* 8/17/2011
+*/
+
+
+/* Table of Contents
+==================================================
+    #Base 960 Grid
+    #Tablet (Portrait)
+    #Mobile (Portrait)
+    #Mobile (Landscape)
+    #Clearing */
+
+
+
+/* #Base 960 Grid
+================================================== */
+
+    .responsive                                  { position: relative; width: 960px; margin: 0 auto; padding: 0; }
+    .column, .columns                           { float: left; display: inline; margin-left: 10px; margin-right: 10px; }
+    .row                                        { margin-bottom: 20px; }
+
+    /* Nested Column Classes */
+    .column.alpha, .columns.alpha               { margin-left: 0; }
+    .column.omega, .columns.omega               { margin-right: 0; }
+
+    /* Base Grid */
+    .responsive .one.column                      { width: 40px;  }
+    .responsive .two.columns                     { width: 100px; }
+    .responsive .three.columns                   { width: 160px; }
+    .responsive .four.columns                    { width: 220px; }
+    .responsive .five.columns                    { width: 280px; }
+    .responsive .six.columns                     { width: 340px; }
+    .responsive .seven.columns                   { width: 400px; }
+    .responsive .eight.columns                   { width: 460px; }
+    .responsive .nine.columns                    { width: 520px; }
+    .responsive .ten.columns                     { width: 580px; }
+    .responsive .eleven.columns                  { width: 640px; }
+    .responsive .twelve.columns                  { width: 700px; }
+    .responsive .thirteen.columns                { width: 760px; }
+    .responsive .fourteen.columns                { width: 820px; }
+    .responsive .fifteen.columns                 { width: 880px; }
+    .responsive .sixteen.columns                 { width: 940px; }
+
+    .responsive .one-third.column                { width: 300px; }
+    .responsive .two-thirds.column               { width: 620px; }
+
+    /* Offsets */
+    .responsive .offset-by-one                   { padding-left: 60px;  }
+    .responsive .offset-by-two                   { padding-left: 120px; }
+    .responsive .offset-by-three                 { padding-left: 180px; }
+    .responsive .offset-by-four                  { padding-left: 240px; }
+    .responsive .offset-by-five                  { padding-left: 300px; }
+    .responsive .offset-by-six                   { padding-left: 360px; }
+    .responsive .offset-by-seven                 { padding-left: 420px; }
+    .responsive .offset-by-eight                 { padding-left: 480px; }
+    .responsive .offset-by-nine                  { padding-left: 540px; }
+    .responsive .offset-by-ten                   { padding-left: 600px; }
+    .responsive .offset-by-eleven                { padding-left: 660px; }
+    .responsive .offset-by-twelve                { padding-left: 720px; }
+    .responsive .offset-by-thirteen              { padding-left: 780px; }
+    .responsive .offset-by-fourteen              { padding-left: 840px; }
+    .responsive .offset-by-fifteen               { padding-left: 900px; }
+
+
+
+/* #Tablet (Portrait)
+================================================== */
+
+    /* Note: Design for a width of 768px */
+
+    @media only screen and (min-width: 768px) and (max-width: 959px) {
+        .responsive                                  { width: 768px; }
+        .responsive .column,
+        .responsive .columns                         { margin-left: 10px; margin-right: 10px;  }
+        .column.alpha, .columns.alpha               { margin-left: 0; margin-right: 10px; }
+        .column.omega, .columns.omega               { margin-right: 0; margin-left: 10px; }
+
+        .responsive .one.column                      { width: 28px; }
+        .responsive .two.columns                     { width: 76px; }
+        .responsive .three.columns                   { width: 124px; }
+        .responsive .four.columns                    { width: 172px; }
+        .responsive .five.columns                    { width: 220px; }
+        .responsive .six.columns                     { width: 268px; }
+        .responsive .seven.columns                   { width: 316px; }
+        .responsive .eight.columns                   { width: 364px; }
+        .responsive .nine.columns                    { width: 412px; }
+        .responsive .ten.columns                     { width: 460px; }
+        .responsive .eleven.columns                  { width: 508px; }
+        .responsive .twelve.columns                  { width: 556px; }
+        .responsive .thirteen.columns                { width: 604px; }
+        .responsive .fourteen.columns                { width: 652px; }
+        .responsive .fifteen.columns                 { width: 700px; }
+        .responsive .sixteen.columns                 { width: 748px; }
+
+        .responsive .one-third.column                { width: 236px; }
+        .responsive .two-thirds.column               { width: 492px; }
+
+        /* Offsets */
+        .responsive .offset-by-one                   { padding-left: 48px; }
+        .responsive .offset-by-two                   { padding-left: 96px; }
+        .responsive .offset-by-three                 { padding-left: 144px; }
+        .responsive .offset-by-four                  { padding-left: 192px; }
+        .responsive .offset-by-five                  { padding-left: 240px; }
+        .responsive .offset-by-six                   { padding-left: 288px; }
+        .responsive .offset-by-seven                 { padding-left: 336px; }
+        .responsive .offset-by-eight                 { padding-left: 348px; }
+        .responsive .offset-by-nine                  { padding-left: 432px; }
+        .responsive .offset-by-ten                   { padding-left: 480px; }
+        .responsive .offset-by-eleven                { padding-left: 528px; }
+        .responsive .offset-by-twelve                { padding-left: 576px; }
+        .responsive .offset-by-thirteen              { padding-left: 624px; }
+        .responsive .offset-by-fourteen              { padding-left: 672px; }
+        .responsive .offset-by-fifteen               { padding-left: 720px; }
+    }
+
+
+/*  #Mobile (Portrait)
+================================================== */
+
+    /* Note: Design for a width of 320px */
+
+    @media only screen and (max-width: 767px) {
+        .responsive { width: 300px; }
+        .columns, .column { margin: 0; }
+
+        .responsive .one.column,
+        .responsive .two.columns,
+        .responsive .three.columns,
+        .responsive .four.columns,
+        .responsive .five.columns,
+        .responsive .six.columns,
+        .responsive .seven.columns,
+        .responsive .eight.columns,
+        .responsive .nine.columns,
+        .responsive .ten.columns,
+        .responsive .eleven.columns,
+        .responsive .twelve.columns,
+        .responsive .thirteen.columns,
+        .responsive .fourteen.columns,
+        .responsive .fifteen.columns,
+        .responsive .sixteen.columns,
+        .responsive .one-third.column,
+        .responsive .two-thirds.column  { width: 300px; }
+
+        /* Offsets */
+        .responsive .offset-by-one,
+        .responsive .offset-by-two,
+        .responsive .offset-by-three,
+        .responsive .offset-by-four,
+        .responsive .offset-by-five,
+        .responsive .offset-by-six,
+        .responsive .offset-by-seven,
+        .responsive .offset-by-eight,
+        .responsive .offset-by-nine,
+        .responsive .offset-by-ten,
+        .responsive .offset-by-eleven,
+        .responsive .offset-by-twelve,
+        .responsive .offset-by-thirteen,
+        .responsive .offset-by-fourteen,
+        .responsive .offset-by-fifteen { padding-left: 0; }
+
+    }
+
+
+/* #Mobile (Landscape)
+================================================== */
+
+    /* Note: Design for a width of 480px */
+
+    @media only screen and (min-width: 480px) and (max-width: 767px) {
+        .responsive { width: 420px; }
+        .columns, .column { margin: 0; }
+
+        .responsive .one.column,
+        .responsive .two.columns,
+        .responsive .three.columns,
+        .responsive .four.columns,
+        .responsive .five.columns,
+        .responsive .six.columns,
+        .responsive .seven.columns,
+        .responsive .eight.columns,
+        .responsive .nine.columns,
+        .responsive .ten.columns,
+        .responsive .eleven.columns,
+        .responsive .twelve.columns,
+        .responsive .thirteen.columns,
+        .responsive .fourteen.columns,
+        .responsive .fifteen.columns,
+        .responsive .sixteen.columns,
+        .responsive .one-third.column,
+        .responsive .two-thirds.column { width: 420px; }
+    }
+
+
+/* #Clearing
+================================================== */
+
+    /* Self Clearing Goodness */
+    .responsive:after { content: "\0020"; display: block; height: 0; clear: both; visibility: hidden; }
+
+    /* Use clearfix class on parent to clear nested columns,
+    or wrap each row of columns in a <div class="row"> */
+    .clearfix:before,
+    .clearfix:after,
+    .row:before,
+    .row:after {
+      content: '\0020';
+      display: block;
+      overflow: hidden;
+      visibility: hidden;
+      width: 0;
+      height: 0; }
+    .row:after,
+    .clearfix:after {
+      clear: both; }
+    .row,
+    .clearfix {
+      zoom: 1; }
+
+    /* You can also use a <br class="clear" /> to clear columns */
+    .clear {
+      clear: both;
+      display: block;
+      overflow: hidden;
+      visibility: hidden;
+      width: 0;
+      height: 0;
+    }
+
+
