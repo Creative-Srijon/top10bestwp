@@ -34,7 +34,7 @@
 
 // Scaffolding
 // -------------------------
-@bodyBackground:        #26aae1; //@white;
+@bodyBackground:        @white;
 @textColor:             @gray; //@grayDark;
 
 
@@ -140,20 +140,20 @@
 // Navbar
 // -------------------------
 @navbarHeight:                    40px;
-@navbarBackground:                @blueDark; //@grayDarker;
-@navbarBackgroundHighlight:       @blue; //@grayDark;
+@navbarBackground:                @grayDarker;
+@navbarBackgroundHighlight:       @grayDark;
 
-@navbarText:                      @white; //@grayLight;
-@navbarLinkColor:                 @white; //@grayLight;
+@navbarText:                      @grayLight;
+@navbarLinkColor:                 @grayLight;
 @navbarLinkColorHover:            @white;
 @navbarLinkColorActive:           @navbarLinkColorHover;
 @navbarLinkBackgroundHover:       transparent;
 @navbarLinkBackgroundActive:      @navbarBackground;
 
-@navbarSearchBackground:          @white; //lighten(@navbarBackground, 25%);
-@navbarSearchBackgroundFocus:     @white; //lighten(@navbarBackground, 25%); @white;
-@navbarSearchBorder:              @white; //darken(@navbarSearchBackground, 30%);
-@navbarSearchPlaceholderColor:    @gray; //@white; #ccc;
+@navbarSearchBackground:          lighten(@navbarBackground, 25%);
+@navbarSearchBackgroundFocus:     @white;
+@navbarSearchBorder:              darken(@navbarSearchBackground, 30%);
+@navbarSearchPlaceholderColor:    #ccc;
 
 
 // Hero unit
