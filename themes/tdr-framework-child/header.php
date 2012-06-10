@@ -75,13 +75,13 @@
         <!-- HEADER
         --------------------------------------------------------------------------->
         <header>
+            <?php if ( false ) { ?>
             <div id="header">
                 <div class="row">
                     <div class="span12">
-                        Some Header content.
                     </div><!-- end .span12 -->
                 </div><!-- end .row -->
-
-                        
             </div><!-- end #header -->
+            <?php } ?>
+
         </header>

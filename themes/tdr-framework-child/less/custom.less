@@ -5,10 +5,20 @@
 ******************************************************************************/
 body {
     background-image: url('./images/background-texture.jpg');
+    background-color: #dadad4;
 }
 
 #main-container {
     padding-top: 40px;
+    padding-bottom: 20px;
+}
+
+.label {
+    vertical-align: baseline;
+}
+
+.navbar .divider-vertical {
+    margin: 0;
 }
 
 /* HEADER 
@@ -25,6 +35,7 @@ body {
     background-color: @white;
     border: 5px solid @grayLighter;
     .box-shadow(0 0 6px lighten(@gray, 20%));
+    padding-bottom: 2 * @baseLineHeight;
 }
 
 /* IMPORTS OF TEMPLATE PAGES
