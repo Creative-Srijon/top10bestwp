@@ -51,8 +51,8 @@
         <div class="navbar navbar-fixed-top">
             <div class="navbar-inner">
                 <div class="container">
-                    <?php
-                    $home_menu_item = '<li class="menu-item-home"><a href="' . get_home_url()  . '"><i class="icon-home icon-white"></i></a></li><li class="divider-vertical"></li>';
+                <?php
+        $home_menu_item = '<li class="menu-item-home"><a id="logo" href="' . get_home_url()  . '"><i class="icon-home icon-white"></i></a></li><li class="divider-vertical"></li>';
                     $items_wrap = '<ul id="%1$s" class="%2$s">' . $home_menu_item  . '%3$s</ul>';
                     $items_wrap .= get_search_form( $echo = false );
 

@@ -500,6 +500,14 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 ******************************************************************************/
 include_once( get_template_directory() . '/tdr_framework_contactology_functions.php' );
 
+/* PROMOTIONS AND CONTESTS
+******************************************************************************/
+include_once( get_template_directory() . '/tdr_framework_promotion_functions.php' );
+
+/* OUR TOP CHOICES WIDGET 
+ * ***************************************************************************/
+include_once( get_template_directory() . '/tdr_top_choices_widget.php' );
+
 /* ADD SUPPORT FOR PAGE CATEGORIES
 ******************************************************************************/
 add_action('admin_init', 'tdr_add_page_categories');

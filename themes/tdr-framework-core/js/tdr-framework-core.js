@@ -7,6 +7,57 @@ jQuery(document).ready(function() {
     jQuery('*[rel="tooltip"]').tooltip();
 });
 
+/* ------------------------------------------------------------
+ * COOKIES
+ * ------------------------------------------------------------*/
+/*!
+ * jQuery Cookie Plugin
+ * https://github.com/carhartl/jquery-cookie
+ *
+ * Copyright 2011, Klaus Hartl
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://www.opensource.org/licenses/mit-license.php
+ * http://www.opensource.org/licenses/GPL-2.0
+ */
+(function($) {
+    $.cookie = function(key, value, options) {
+
+        // key and at least value given, set cookie...
+        if (arguments.length > 1 && (!/Object/.test(Object.prototype.toString.call(value)) || value === null || value === undefined)) {
+            options = $.extend({}, options);
+
+            if (value === null || value === undefined) {
+                options.expires = -1;
+            }
+
+            if (typeof options.expires === 'number') {
+                var days = options.expires, t = options.expires = new Date();
+                t.setDate(t.getDate() + days);
+            }
+
+            value = String(value);
+
+            return (document.cookie = [
+                encodeURIComponent(key), '=', options.raw ? value : encodeURIComponent(value),
+                options.expires ? '; expires=' + options.expires.toUTCString() : '', // use expires attribute, max-age is not supported by IE
+                options.path    ? '; path=' + options.path : '',
+                options.domain  ? '; domain=' + options.domain : '',
+                options.secure  ? '; secure' : ''
+            ].join(''));
+        }
+
+        // key and possibly options given, get cookie...
+        options = value || {};
+        var decode = options.raw ? function(s) { return s; } : decodeURIComponent;
+
+        var pairs = document.cookie.split('; ');
+        for (var i = 0, pair; pair = pairs[i] && pairs[i].split('='); i++) {
+            if (decode(pair[0]) === key) return decode(pair[1] || ''); // IE saves cookies with empty string as "c; ", e.g. without "=" as opposed to EOMB, thus pair[1] may be undefined
+        }
+        return null;
+    };
+})(jQuery);
+
 /* -------------------------------------------------------------
  PLACEHOLDERS
 --------------------------------------------------------------*/
@@ -307,10 +358,104 @@ jQuery( document ).ready (function() {
 		form = this;
 		// Define status containers
 		error_container = jQuery( form ).siblings( '.tdr_register_email_error' );
+		duplicate_error_container = jQuery( form ).siblings( '.tdr_register_email_duplicate_error' );
         validation_error_container = jQuery( form ).siblings( '.tdr_register_email_validation_error' );
 		success_container = jQuery( form ).siblings( '.tdr_register_email_success' );
 		// Toggle ajax-in-working-state class
 		jQuery( form ).find( '.tdr_register_email_working' ).ajaxStart( function() {
+			jQuery( this ).show();
+		}).ajaxStop( function() {
+			jQuery( this ).hide();
+		});
+		jQuery( submit_button ).ajaxStart( function() {
+			jQuery( this ).hide();
+		}).ajaxStop( function() {
+			jQuery( this ).show();
+		});
+		// Hide status on each submission
+		jQuery( error_container).add( duplicate_error_container ).add( validation_error_container ).add( success_container ).hide();
+		// Get user information from form
+		var user_information = {};
+		jQuery( form ).find( 'input' ).each(function() {
+            //Remove any error styling
+            jQuery(this).parents( '.control-group' ).removeClass( 'error' );
+            // Get key and value
+			var key = jQuery(this).attr( 'name' );
+			var value = jQuery(this).val();
+            // Encode value
+			value = encodeURIComponent(value);
+            // Set key and value
+			user_information[key] = value;
+		});
+		var request_details = {
+			list_id: jQuery( form ).attr('data-tdr-list-id'),
+            group_id: jQuery ( form ).attr('data-tdr-group-id'),
+			opt_in_source: jQuery( form ).attr('data-tdr-opt-in-source'),
+			password_length: jQuery( form ).attr('data-tdr-pw-length'),
+			user_registration: jQuery( form ).attr('data-tdr-user-registration'),
+			email_capture: jQuery( form ).attr('data-tdr-email-capture'),
+			is_promotion: jQuery( form ).attr('data-tdr-promotion'),
+			promotion_name: jQuery( form ).attr('data-tdr-promotion-name'),
+			referrer_id: jQuery( form ).attr('data-tdr-promotion-referrer')
+		}
+		// IE FIX for undefined fields breaking requests
+		for ( field in request_details ) { // Look through fields in request details
+			if ( request_details[ field ] == undefined ) {
+				request_details[ field ] = ''; // Set undefined fields to an empty string
+			}
+		}
+		var post_data = {
+			request_details: request_details,
+			user_information: user_information
+		}
+		var data = {
+			action: 'tdr_email_list_subscribe',
+			data: JSON.stringify(post_data)
+		};
+		jQuery.post(ajaxurl, data, function(response) {
+			response = jQuery.parseJSON(response);
+			if ( response.error ) {
+				if ( response.duplicate ) {
+					jQuery( duplicate_error_container ).show();
+				}
+				else {
+					jQuery( error_container ).show();
+				}
+			}
+			else if ( response.invalid.length > 0 ) {
+                jQuery( validation_error_container ).show();
+                for ( fieldName in response.invalid ) {
+					jQuery( form ).find('input[name|="' + response.invalid[fieldName]  + '"]').parents('.control-group').addClass( 'error' );
+                }				
+			}
+			else if ( response.message ) {
+				jQuery( success_container ).show().delay(10000).fadeOut('slow');
+				if ( request_details.is_promotion === 'true' ) {
+					jQuery( form ).data('referral_id', response.referral_id ); // Give access to the referral id for the user
+					jQuery( form ).trigger('tdr_promo_success');
+				}
+			}
+		}).error( function(error) {
+			jQuery( error_container ).show();
+		});
+		event.preventDefault();
+		return false;
+	});
+});
+/* CONTESTS: USER SOCIAL MEDIA ACCOUNT BINDING TO USER PROFILE
+ * ***************************************************************************/
+jQuery( document ).ready (function() {
+	jQuery ( '.tdr_bind_social_media_accounts' ).parents('form').on( 'submit', function( event ) {
+		// Define submit button
+		submit_button = jQuery( this ).find('.tdr_bind_social_media_accounts');
+		// Define the form
+		form = this;
+		// Define status containers
+		error_container = jQuery( form ).siblings( '.tdr_bind_social_media_error' );
+        validation_error_container = jQuery( form ).siblings( '.tdr_bind_social_media_validation_error' );
+		success_container = jQuery( form ).siblings( '.tdr_bind_social_media_success' );
+		// Toggle ajax-in-working-state class
+		jQuery( form ).find( '.tdr_bind_social_media_working' ).ajaxStart( function() {
 			jQuery( this ).show();
 		}).ajaxStop( function() {
 			jQuery( this ).hide();
@@ -336,18 +481,15 @@ jQuery( document ).ready (function() {
 			user_information[key] = value;
 		});
 		var request_details = {
-			list_id: jQuery( form ).attr('data-tdr-list-id'),
-            group_id: jQuery ( form ).attr('data-tdr-group-id'),
-			opt_in_source: jQuery( form ).attr('data-tdr-opt-in-source'),
-			password_length: jQuery( form ).attr('data-tdr-pw-length'),
-			user_registration: jQuery( form ).attr('data-tdr-user-registration')
+			promotion_name: jQuery( form ).attr('data-tdr-promotion-name'),
+			referrer_id: jQuery( form ).attr('data-tdr-promotion-referrer')
 		}
 		var post_data = {
 			request_details: request_details,
 			user_information: user_information
 		}
 		var data = {
-			action: 'tdr_email_list_subscribe',
+			action: 'tdr_bind_social_media_accounts',
 			data: JSON.stringify(post_data)
 		};
 		jQuery.post(ajaxurl, data, function(response) {
@@ -363,11 +505,73 @@ jQuery( document ).ready (function() {
 			}
 			else if ( response.message ) {
 				jQuery( success_container ).show().delay(10000).fadeOut('slow');
+				jQuery( form ).trigger('tdr_bind_social_media_success');
 			}
 		}).error( function(error) {
 			jQuery( error_container ).show();
 		});
 		event.preventDefault();
 		return false;
+	});
+});
+
+/* HELLO BAR AND GOODBYE BAR DISMISS HANDLERS
+ * ***************************************************************************/
+ jQuery( document ).ready( function() {
+	jQuery( '[data-dismiss="hello"]' ).on( 'click', function() {
+		jQuery( this ).parents('.hello').slideUp('300');
+	});
+	jQuery( '[data-dismiss="goodbye"]' ).on( 'click', function() {
+		jQuery( this ).parents('.goodbye').slideUp('300');
+	});
+});
+
+/* OUR TOP CHOICES WIDGET 
+ * ***************************************************************************/
+jQuery( document ).ready( function() {
+	jQuery( '.our_top_menu_item' ).on( 'click', function() {
+		// Get the ID of this 
+		var offerCategory = jQuery( this ).attr('id');
+
+		// Edit the Menu
+		jQuery( this ).children().attr( 'id', 'selected' );
+		jQuery( this ).siblings().children().attr( 'id', '' );
+
+		// Animate out the section
+		jQuery( '.our_top_choices_section' ).animate( { opacity: 0 }, 'fast');
+
+		// set up the data for AJAX call
+		var data = {
+			action: 'tdr_top_choices_widget_ajax',
+			offer_cat_id: offerCategory
+		};
+
+		// Make the AJAX call
+		jQuery.post( ajaxurl, data, function( response ) {
+			// Display the response in the section and animate in
+			jQuery( '.our_top_choices_section' ).html( response ).animate( { opacity: 1 }, 'fast');
+		});
+	});
+});
+
+jQuery( document ).ready( function() {
+	// Jump Page Controller
+	jQuery(document).ready( function() {
+		var windowCount = 1;
+		jQuery( document ).on('click', '.our_top_visit a', function( event ) {
+			
+			// Create Jump Page and Open it
+			var url = jQuery( this ).attr('href');
+			var windowName = "popUp" + windowCount;
+			var top = (screen.height/2)-(800/2); // offset by window height/2
+			var left = (screen.width/2)-(1000/2); // offset by window width/2
+			var windowSize = "width=1000,height=800,resizable=yes,location=yes,top=" + top + ",left=" + left;
+			window.open( url, windowName, windowSize );
+			windowCount++;
+			
+			// Prevent Default Action
+			event.preventDefault();
+			return false;
+		});	
 	});
 });
