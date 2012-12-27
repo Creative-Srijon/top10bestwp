@@ -5,8 +5,8 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Tags: seo, SEO, google, meta, meta description, search engine optimization, xml sitemap, xml sitemaps, google sitemap, sitemap, sitemaps, robots meta, rss, rss footer, yahoo, bing, news sitemaps, XML News Sitemaps, WordPress SEO, WordPress SEO by Yoast, yoast, multisite, canonical, nofollow, noindex, keywords, meta keywords, description, webmaster tools, google webmaster tools, seo pack
 Requires at least: 3.1
-Tested up to: 3.4
-Stable tag: 1.2.5
+Tested up to: 3.5
+Stable tag: 1.3.4.1
 
 Improve your WordPress SEO: Write better content and have a fully optimized WordPress site using the WordPress SEO plugin by Yoast.
 
@@ -122,6 +122,13 @@ Once you'll start using this plugin, you won't ask that question anymore, you'll
 
 Also, other than All In One SEO Pack, this plugin has a completely working canonical implementation for all pages within your site, whereas the one in All In One SEO pack is broken, it was originally written by the author of this plugin, so he knows. It comes with XML Sitemaps, an XML News sitemap module, loads and loads of robots meta options and other options to improve your SEO.
 
+= I want to use your XML Sitemaps with NGINX, is that possible? =
+
+Yes, of course! Here are the rewrite rules you'll need:
+
+`rewrite ^/sitemap_index\.xml$ /index.php?sitemap=1 last;
+rewrite ^/([^/]+?)-sitemap([0-9]+)?\.xml$ /index.php?sitemap=$1&sitemap_n=$2 last;`
+
 == Screenshots ==
 
 1. The WordPress SEO plugin general meta box. You'll see this on edit post pages, for posts, pages and custom post types.
@@ -133,6 +140,151 @@ Also, other than All In One SEO Pack, this plugin has a completely working canon
 7. The advanced section of the WordPress SEO meta box.
 
 == Changelog ==
+
+= 1.3.4.1 =
+
+* Bug in page analysis regex.
+
+= 1.3.4 =
+
+* Fix bug in custom field value retrieval for new drafts.
+* Fix bug in meta box value for checkboxes (only used currently in News extension).
+* Remove redirect added in 1.3.3 as it seems to cause loops on some servers, will investigate later.
+* Add option to filter `wpseo_admin_pages` so more pages can use WP SEO admin stylesheets.
+* Prevent notice for images without alt tags.
+* Use mb_string when possible.
+
+= 1.3.3 =
+
+* Properly `$wpdb->prepare` all queries that need preparing.
+* Fix wrong escaping in admin pointers.
+* Make %%currentdate%% and %%currenttime%% variables respect WP date format settings.
+* Add %%currentday%% format.
+* Force remove Jetpack OpenGraph.
+* Fix the weird addition of `noindex, nofollow` on URLs with ?replytocom that was added in 3.5.
+* Force XML sitemap to be displayed on the proper domain URL, so XSLT works.
+
+= 1.3.2 =
+
+* Updated wordpress-seo.pot
+* Updated Turkish (tr_TR) filename.
+* Updated Spanish (es_ES) translation.
+* Fixed bug where non-admin users couldn't save their profile updates.
+* Fixed bug with the same OpenGraph image appearing multiple times.
+* Fixed bug that would prevent import and export of plugin settings.
+* Try to do a redirect back after saving settings.
+* Properly allow for attachment pages in XML sitemaps, default them to off.
+* Fixed annoying bug where checkboxes wouldn't display as "checked" even when the value was set to true.
+* Show post type name and taxonomy name (as opposed to label) next to labels in XML sitemap settings to more easily identify post types and taxonomies.
+* Switch tracking to a daily cronjob instead of an admin process to prevent tracking from slowing down admin interface.
+* Focus keyword detection now properly works for diacritical focus keywords as well.
+* Properly apply filters to meta desc and titles in admin grid.
+* Properly detect new versions of Facebook plugin too.
+* Allow changing of the number of posts per XML sitemap, to prevent memory issues on certain installs.
+
+= 1.3.1.1 =
+
+* Some of that escaping was too aggressive.
+
+= 1.3.1 =
+
+* Fix somewhat too aggressive escaping of content.
+* Added notice text for non-existing .htaccess file / robots.txt file.
+
+= 1.3 =
+
+* Long list of small fixes and improvements to code best practices after Sucuri review. Fixes 3 small security issues.
+* Updated .pot file
+* Updated Danish (da_DK), Indonesian (id_ID), Chinese (zh_CN), Russian (ru_RU), Norwegian (nb_NO), Turkish (tr_TK), Hebrew (he_IL) and Persian (fa_IR).
+* Added Arabic (ar), Catalan (ca) and Romanian (ro_RO).
+
+= 1.2.8.7 =
+
+* Fixed %%category%% and %%tag%% and some other variables that weren't working since 1.2.8.6.
+
+= 1.2.8.6 =
+
+* Revert gplus changes in 1.2.8.5 that were causing issues.
+* Fix a tracking timeout.
+* Fix a bunch of notices throughout variables functions.
+
+= 1.2.8.5 =
+
+* Fixed a bug for MultiSite due to a missing attribute in calling `get_admin_url`.
+* Updated Hebrew (he_IL), Dutch (nl_NL) French (fr_FR), Czech (cs_CZ), Italian (it_IT), Brazilian Portuguese (pt_BR).
+* Added Norwegian (nb_NO) and Portuguese (pt_PT).
+* Added a `wpseo_robots` filter for the robots meta tag.
+* Fixed integration with the [Facebook plugin](http://wordpress.org/extend/plugins/facebook).
+
+= 1.2.8.4 =
+
+* Fix for double title issues with themes that filter `wp_title`, by having WP SEO filter a bit later in the process
+  (but no too late because the genesis <title> wrap filter is on 30).
+* Improved Twitter Card functionality: twitter meta tags now appear above OpenGraph meta tags.
+* Updated a bunch of languages: da_DK, de_DE, es_ES, fa_IR, fr_FR, he_IL, hu, hu_HU, it_IT, nl_NL, pt_BR, ru_RU, tr_TK, zh_CN.
+* Added Czech (cs_CZ) and Spanish - Venezuela (es_VE).
+
+= 1.2.8.3 =
+
+* Updated all the languages in hopes to fix the empty text strings.
+* Added basic translations for Danish (da_DK) and Finnish (fi).
+
+= 1.2.8.2 =
+
+* "Fix" for tracking popup with empty buttons.
+
+* Updated languages
+	* French fr_FR
+	* Dutch nl_NL
+	* Turkish tr_TK
+
+= 1.2.8.1 =
+
+* Fixed one s, that caused a fatal error. Sigh.
+
+= 1.2.8 =
+
+* Bug fixes:
+    * Fix for images not showing up in XML sitemap.
+    * Fix to allow breadcrumb titles to once again be set for CPT archive pages.
+    * Prevent empty rel=publisher link from being put out.
+    * Several fixes to the strip category base settings.
+    * Several fixes to the hardcoded meta description recognition code.
+    * Prevent title testing from priming the cache.
+    * Prevent upgrading from a recent version to force a title test, no longer overrides manual force rewrite settings.
+    * Fix paginated singular post / page issue when single isn't paginated.
+* Enhancements:
+    * No longer show .htaccess editor when on NGINX.
+    * Move tracking to its own file, switching to my own tracking instead of PressTrends so more specific options can be tracked.
+    * Tracking can now be enabled and disabled from the SEO Dashboard screen.
+* Documentation:
+    * Added rewrite rules for NGINX to FAQ.
+    * Now showing rewrite rules for NGINX on XML sitemaps settings page.
+
+= 1.2.7 =
+
+* Fixed compatibility with 3.3 and lower.
+
+= 1.2.6 =
+
+* Enhancements:
+    * Added (optional) PressTrends tracking to get some more info on common configurations of WP to test for.
+    * Made config page loading even faster.
+    * Added a link to my [Amazon wishlist](http://amzn.com/w/CBV7CEOJJH98) to the plugin sidebar in the admin ;)
+    * Added a check to see whether your theme contains a hardcoded meta description, and options to remove it.
+    * Added a Google+ Publisher input option for the homepage.
+    * Added the option to allow showing the date in the snippet preview per post type.
+    * Removed aggressive cache deleting in the XML sitemaps. Could cause issues with some plugins but should increase speed.
+    * Force the XML Sitemap to return a 200 OK Header.
+* Deprecated functionality:
+    * The breadcrumbs functionality no longer automatically hooks as this was giving too many issues.
+* Bug fixes:
+    * Prevent adding trailing slash on paged posts when force trailing slash on categories and tags is on.
+    * Breadcrumbs now properly use `home_url` instead of `site_url`.
+    * Simplify shortcode stripping, to make it actually work.
+    * Prevent several notices in XML Sitemaps class.
+* Textual / documentation changes:
+    * Add a "without @" notice to the Twitter username input field.
 
 = 1.2.5 =
 
