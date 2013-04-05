@@ -2,11 +2,11 @@
 Contributors: nosilver4u
 Tags: images, image, attachments, attachment
 Requires at least: 2.9
-Tested up to: 3.4.2
-Stable tag: 1.2.2
+Tested up to: 3.5.1
+Stable tag: 1.4.0
 License: GPLv3
 
-Reduce file sizes and improve performance for images within WordPress including NextGEN Gallery. Uses jpegtran, optipng/pngout, and gifsicle.
+Reduce file sizes for images within WordPress including NextGEN Gallery and GRAND FlAGallery. Uses jpegtran, optipng/pngout, and gifsicle.
 
 == Description ==
 
@@ -16,37 +16,44 @@ By default, EWWW Image Optimizer uses lossless optimization techniques, so your 
 
 Images are optimized using the [jpegtran](http://jpegclub.org/jpegtran/), [optipng](http://optipng.sourceforge.net/), [pngout](advsys.net/ken/utils.htm), and [gifsicle](http://www.lcdf.org/gifsicle/) image tools (available for free). For PNG files, either optipng or pngout can be used. If you want the best optimization, install both, set optipng to level 3 (beyond that is just crazy and rarely yields significant gains) and pngout to level 0. Images are converted using the above tools and GD or 'convert' (ImageMagick).
 
-EWWW Image Optimizer calls optimization utilities directly which is better suited to shared hosting situations where these utilities may already be installed. In addition, optipng and gifsicle are included with the plugin. Jpegtran and pngout can be installed with one-click from the settings page if your host doesn't already have them.
+EWWW Image Optimizer calls optimization utilities directly which is better suited to shared hosting situations where these utilities may already be installed. Pre-compiled binaries/executables are provided for optipng, gifsicle, and jpegtran. Pngout can be installed with one-click from the settings page.
 
 **Why use EWWW Image Optimizer?**
 
 1. **Your pages will load faster.** Smaller image sizes means faster page loads. This will make your visitors happy, and can increase ad revenue.
 1. **Faster backups.** Smaller image sizes also means faster backups.
 1. **Less bandwidth usage.** Optimizing your images can save you hundreds of KB per image, which means significantly less bandwidth usage.
-1. **Super fast.** Because it runs on your own server, you don’t have to wait for a third party service to receive, process, and return your images. You can optimize hundreds of images in just a few minutes. Png files take the longest, but you can adjust the settings for your situation.
-1. **Better PNG optimization using pngout and optipng in conjunction.
-1. **Root access not needed** Pre-compiled binaries are made available to install directly within the plugin folder. 
+1. **Super fast.** Because it runs on your own server, you don’t have to wait for a third party service to receive, process, and return your images. You can optimize hundreds of images in just a few minutes. PNG files take the longest, but you can adjust the settings for your situation.
+1. **Better PNG optimization.** YOu can use pngout and optipng in conjunction.
+1. **Root access not needed** Pre-compiled binaries are made available to install directly within the Wordpress folder. 
 
 = NextGEN Integration =
 
-Features re-optimization capability, and bulk optimizing. The NextGEN Bulk Optimize function is located under the Wordpress Tools menu, and should optimize all images in all galleries. If anyone has a better idea for where the tool should go, feel free to post in the support area, or on the plugin homepage. Alternatively, if you can figure out a way to hook into the existing NextGEN menu, that would be ideal. I just can't seem to find a way to do that.
+Features re-optimization capability, and bulk optimizing. The NextGEN Bulk Optimize function is located near the bottom of the NextGEN menu, and will optimize all images in all galleries.
 NOTE: Does not optimize thumbnails on initial upload, must re-optimize images to optimize thumbnails.
+
+= GRAND Flash Album Gallery Integration =
+
+Features optimization on upload capability, re-optimization, and bulk optimizing. The Bulk Optimize function is located near the bottom of the FlAGallery menu, and will optimize all images in all galleries.
 
 == Installation ==
 
 1. Upload the 'ewww-image-optimizer' plugin to your '/wp-content/plugins/' directory.
 1. Activate the plugin through the 'Plugins' menu in WordPress.
-1. Ensure jpegtran, optipng, pngout and gifsicle are installed on your Linux server (basic installation instructions are below if they are not). You will receive a warning when you activate the plugin if they are not present. This message will go away once you have them installed. 
-1. *Optional* Visit the settings page to configure paths, enable/disable specific tools and turn on advanced optimization features.
+1. Ensure jpegtran, optipng, pngout and gifsicle are installed on your Linux server (basic installation instructions are below if they are not). You will receive a warning when you activate the plugin if they are not present. This message will go away once you have them installed.
+1. The plugin will attempt to install jpegtran, optipng, and gifsicle automatically for you. This requires that the wp-content folder is writable by the user running the web server.
+1. If the automatic install did not work, find the appropriate binaries for your system in the ewww-image-optimizer plugin folder, copy them to wp-content/ewww/ and remove the OS 'tag' (like -linux or -fbsd). No renaming is necessary on Windows, just copy the .exe files to the wp-content/ewww folder. IMPORTANT: Do not symlink or modify the binaries in any way, or they will not pass the security checks.
+1. *Optional* Visit the settings page to enable/disable specific tools and turn on advanced optimization features.
 1. Done!
 
 = Installing pngout =
 
-Pngout is new in version 1.1.0 and is not enabled by default because it is resource intensive. Optipng is the preferred PNG optimizer if you have resource (CPU) constraints. Pngout is also not open-source for those who care about such things, but is free.
+Pngout is new in version 1.1.0 and is not enabled by default because it is resource intensive. Optipng is the preferred PNG optimizer if you have resource (CPU) constraints. Pngout is also not open-source for those who care about such things, but the command-line version is free.
+
 1. Go to the settings page.
-1. Click one of the links near the middle of the page to install pngout for your server, and the plugin will download the pngout archive, unpack it, and install the version that you chose. If you don't know what architecture your server is, you can stick with the i386 or ask your webhost about it. You can always choose a different version later, and the plugin will simply update the version that is used.
+1. Uncheck the option to disable pngout and Save your settings.
+1. Click the link in the Plugin Status area to install pngout for your server, and the plugin will download the pngout archive, unpack it, and install the appropriate version for your server.
 1. Adjust the pngout level according to your needs. Level 0 gives the best results, but can take up to a minute or more on a single image.
-1. If the one-click install isn't working for you, download the latest version from http://www.jonof.id.au/kenutils and extract the appropriate pngout-static to the plugins/ewww-image-optimizer/ folder.
 
 = Installing optipng =
 
@@ -57,36 +64,45 @@ Pngout is new in version 1.1.0 and is not enabled by default because it is resou
 1. Uncompress optipng: *tar xvzf optipng-0.7.4.tar.gz && cd optipng-0.7.4*
 1. Configure and compile optipng: *./configure && make*
 1. If you have root access, install it with *make install*
-1. If not, copy the binary from */optipng-0.7.4/src/optipng/optipng* to the plugin folder (wordpress/wp-content/plugins/ewww-image-optimizer).
+1. If not, copy the binary from */optipng-0.7.4/src/optipng/optipng* to the ewww tool folder (wordpress/wp-content/ewww/optipng-custom).
 
 = Installing jpegtran =
 
-1. Try the one-click install on the settings page, or download it manually and place it in the plugin folder (wordpress/wp-content/plugins/ewww-image-optimizer).
-1. If you own your own server, or have root access, it is part of the libjpeg-turbo-progs on Debian/Ubuntu, and likely something similar on rpm distros (Fedora, CentOS, RHEL, SuSE).
+1. Jpegtran is now bundled with the plugin. If it isn't working for some reason, keep going...
+1. If you have root access to your server, jpegtran is part of the libjpeg-turbo-progs on Debian/Ubuntu, and likely something similar on rpm distros (Fedora, CentOS, RHEL, SuSE). If you are on shared hosting, read on... These steps can/should generally all be done via the command line
+1. Download the latest stable version of [jpegtran](http://www.ijg.org/) to your home directory
+1. Uncompress jpegtran: *tar xvzf jpegsrc.v9.tar.gz && cd jpeg-9*
+1. Configure and compile jpegtran: *./configure --disable-shared && make*
+1. If you have root access, install it with *make install*
+1. If not, copy the binary from */jpeg-9/jpegtran* to the ewww tool folder (wordpress/wp-content/ewww/jpegtran-custom).
 
 = Installing gifsicle =
 
 1. Gifsicle is now bundled with the plugin. If it isn't working for you, keep going...
 1. If you have root access to your server, you can install gifsicle from the standard repositories (yum/rpm or apt/deb). If you are on shared hosting, read on... These steps can/should generally all be done via the command line
 1. Download the latest version of [gifsicle](http://www.lcdf.org/gifsicle/) to your home directory
-1. Uncompress gifsicle: *tar xvzf gifsicle-1.67.tar.gz && cd gifsicle-1.67*
+1. Uncompress gifsicle: *tar xvzf gifsicle-1.70.tar.gz && cd gifsicle-1.70*
 1. Configure and compile gifsicle (we disable gifview and gifdiff as they are not needed): *./configure --disable-gifdiff --disable-gifview && make*
 1. If you have root access, install it with *make install*
-1. If not, copy the binary from */gifsicle-1.67/src/gifsicle* to the plugin folder (wordpress/wp-content/plugins/ewww-image-optimizer).
+1. If not, copy the binary from */gifsicle-1.70/src/gifsicle* to the ewww tool folder (wordpress/wp-content/ewww/gifsicle-custom).
 
 == Frequently Asked Questions ==
+
+= Does the plugin replace existing images? =
+
+Yes, but only if the optimized version is smaller. The plugin should NEVER create a larger image.
 
 = The bulk optimizer doesn't seem to be working, what can I do? =
 
 First, upgrade to the latest version. Since version 1.0.8, each image is given 50 seconds to complete (which actually doesn't include time used by the optimization utilities). You can also increase the setting max_execution_time in your php.ini file. That said, there are other timeouts with Apache, and possibly other limitations of your webhost. If you've tried everything else, the last thing to look for is large PNG files. In my tests on a shared hosting setup, "large" is anything over 300 KB. You can first try decreasing the PNG optimization level in the settings. If that doesn't work, perhaps you ought to convert that PNG to JPG. Screenshots are often done as PNG files, but that is a poor choice for anything with photographic elements.
 
-= Can I use EWWW Image Optimizer with a Windows server? =
+= What are the supported operating systems? =
 
-Not right now, but maybe if I run out of features to implement for Linux. All of the utilities have windows builds, but it would require a significant rewrite to make it platform agnostic.
+I've tested it on Windows (with Apache), Linux, Mac OSX, and FreeBSD.
 
 = How are JPGs optimized? =
 
-Using the command *jpegtran -copy all -optimize -progressive original-file > optimized-file*. Optionally, the -copy switch gets the 'none' parameter if you choose to strip metadata from your JPGs on the options page.
+Using the command *jpegtran -copy all -optimize -progressive -outfile optimized-file original-file*. Optionally, the -copy switch gets the 'none' parameter if you choose to strip metadata from your JPGs on the options page.
 
 = How are PNGs optimized? =
 
@@ -98,7 +114,7 @@ Using the command *gifsicle -b -O3 --careful original file*. This is particularl
 
 = Why not just convert GIFs to PNGs then? =
 
-Go for it, version 1.2 makes this possible so long as you have either one of the PNG optimizers available.
+Go for it, version 1.2+ makes this possible so long as you have either one of the PNG optimizers available.
 
 = I want to know more about image optimization, and why you chose these options/tools. =
 
@@ -107,10 +123,86 @@ That's not a question, but since I made it up, I'll answer it. See the Image Opt
 == Screenshots ==
 
 1. Plugin settings page.
-2. Additional optimize column added to media listing. You can see your savings, or manually optimize individual images.
-3. Bulk optimization page. You can optimize all your images at once. This is very useful for existing blogs that have lots of images.
+2. Additional optimize column added to media listing. You can see your savings, manually optimize individual images, and restore originals (converted only).
+3. Bulk optimization page. You can optimize all your images at once and resume a previous bulk optimization. This is very useful for existing blogs that have lots of images.
 
 == Changelog ==
+
+= 1.4.0 =
+* fixed bug with missing 'nice' not detected properly
+* added: Windows support, includes gifsicle, optipng, and jpegtran executables
+* added: FreeBSD support, includes gifsicle, optipng, and jpegtran executables
+* rewrote calls to jpegtran to avoid shell-redirection and work in Windows
+* jpegtran is now bundled for all platformsi
+* updated gifsicle to 1.70
+* pngout installer and version updated to February 20-21 2013
+* removed use of shell_exec()
+* fixed warning on ImageMagick version check
+* revamped binary checking, should work on more hosts
+* check permissions on jpegtran
+* rewrote bulk optimizer to use ajax for better progress indication and error handling
+* added: 64-bit jpegtran binary for linux servers missing compatibility libraries
+
+= 1.3.8 =
+* fixed: finfo library doesn't work on PHP versions below 5.3.0 due to missing constant 
+* fixed: resume button doesn't resume when the running the bulk action on groups of images 
+* shell_exec() and exec() detection is more robust 
+* added architecture information and warning if 'file' command is missing on settings page 
+* added finfo functionality to nextgen and flagallery
+
+= 1.3.7 =
+* re-compiled bundled optipng and gifsicle on CentOS 5 for wider compatibility
+
+= 1.3.6 =
+* fixed: servers with gzip still failed on bulk operations, forgot to delete a line I was testing for alternatives
+* fixed: some servers with shell_exec() disabled were not detected due to whitespace issues
+* fixed: shell_exec() was not used in PNGtoJPG conversion
+* fixed: JPGs not optimized during PNGtoJPG conversion
+* allow debug info to be shown via javascript link on settings page
+* code cleanup
+
+= 1.3.5 =
+* fixed: resuming a bulk optimize on FlAGallery was broken
+* added resume button when running the bulk optimize operation to make it easier to resume a bulk optimize
+
+= 1.3.4 =
+* fixed optipng check for older versions (0.6.x)
+* look in system paths for pngout and pngout-static
+* added option for ignoring bundled binaries and using binaries located in system paths instead
+* added notices on options page for out-of-date binaries
+
+= 1.3.3 =
+* use finfo functions in PHP 5.3+ instead of deprecated mime_content_type
+* use shell_exec() to make calls to jpegtran more secure and avoid output redirection
+* added bulk action to optimize multiple galleries on the manage galleries page - FlAGallery
+* added bulk action to optimize multiple images on the manage images page - FlAGallery
+
+= 1.3.2 =
+* fixed: forgot to apply gzip fix to NextGEN and FlAGallery
+
+= 1.3.1 =
+* fixed: turning off gzip for Apache broke bulk operations
+
+= 1.3.0 =
+* support for GRAND FlAGallery (flash album gallery)
+* added ability to restore originals after a conversion (we were already storing the original paths in the database)
+* fixed: resized converted images had the wrong original path stored
+* fixed: tools get deleted after every upgrade (moved to wp-content/ewww)
+* fixed: using activation hook incorrectly to fix permissions on upgrades (now we check when you visit the wordpress admin)
+* removed deprecated path settings, custom-built binaries will be copied automatically to the wp-content/ewww folder
+* better validation of tools, no longer using 'which'
+* removed redundant path checks to avoid extra processing time
+* moved NextGEN bulk optimize into NextGEN menu
+* NextGEN and FlAGallery functions only run when the associated gallery plugin is active
+* turn off page compression for bulk operations to avoid output buffering
+* added status messages when attempting automatic installation of jpegtran or pngout
+* NEW version of bundled gifsicle can produce better-optimized GIFs
+* revamped settings page to combine version info, optimizer status, and installation options
+* binaries for Mac OS X available: gifsicle, optipng, and pngout
+* images are re-optimized when you use the WP Image Editor (but never converted)
+* fixed: unsupported files have empty path stored in meta
+* fixed: files with empty paths throw PHP notices in Media Library (DEBUG mode only)
+* when a converted attachment is deleted from wordpress, original images are also cleaned up
 
 = 1.2.2 =
 * fixed: uninitialized variables
@@ -202,6 +294,15 @@ That's not a question, but since I made it up, I'll answer it. See the Image Opt
 * First release (forked from CW Image Optimizer)
 
 == Upgrade Notice ==
+
+= 1.4.0 =
+sorry about the accidental release of 1.3.9, use this one instead
+
+= 1.3.7 =
+If you are using 1.3.6 without problems, you can safely ignore 1.3.7. It is a compatibility fix only.
+
+= 1.3.0 =
+Removed path options, moved optimizers to wp-content/ewww. Requires write permissions on the wp-content folder. Custom compiled binaries should automatically be moved to the wp-content/ewww folder also.
 
 = 1.2.1 =
 SECURITY: bundled optipng is 0.7.4 to address a vulnerability. Fixed invalid missing tools warning. Added conversion operations gif2png, png2jpg, and jpg2png. Setting paths manually will be disabled in a future release, as the plugin now automatically looks in the plugin folder.

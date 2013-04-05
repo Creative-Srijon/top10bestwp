@@ -37,7 +37,6 @@ class WPSEO_Sitemaps {
 		add_action( 'template_redirect', array( $this, 'redirect' ) );
 		add_filter( 'redirect_canonical', array( $this, 'canonical' ) );
 		add_action( 'wpseo_hit_sitemap_index', array( $this, 'hit_sitemap_index' ) );
-		add_action( 'wpseo_ping_search_engines', array( $this, 'ping_search_engines' ) );
 
 		// default stylesheet
 		$this->stylesheet = '<?xml-stylesheet type="text/xsl" href="' . WPSEO_FRONT_URL . 'css/xml-sitemap-xsl.php"?>';
@@ -299,10 +298,12 @@ class WPSEO_Sitemaps {
 			// Optimized query per this thread: http://wordpress.org/support/topic/plugin-wordpress-seo-by-yoast-performance-suggestion
 			// Also see http://explainextended.com/2009/10/23/mysql-order-by-limit-performance-late-row-lookups/
 
+			$status = ( $post_type == 'attachment' ) ? 'inherit' : 'publish';
+
 			$query = $wpdb->prepare( "SELECT l.ID, post_content, post_name, post_author, post_parent, post_modified_gmt, post_date, post_date_gmt
 				FROM (
 					SELECT ID FROM $wpdb->posts {$join_filter}
-						WHERE post_status IN ('publish','inherit')
+						WHERE post_status = '%s'
 						AND	post_password = ''
 						AND post_type = '%s'
 						{$where_filter}
@@ -310,7 +311,7 @@ class WPSEO_Sitemaps {
 						LIMIT %d OFFSET %d ) o
 					JOIN $wpdb->posts l
 					ON l.ID = o.ID
-					ORDER BY l.ID", $post_type, $steps, $offset );
+					ORDER BY l.ID", $status, $post_type, $steps, $offset );
 
 			$posts = $wpdb->get_results( $query );
 
@@ -569,25 +570,6 @@ class WPSEO_Sitemaps {
 		}
 		$output .= "\t</url>\n";
 		return $output;
-	}
-
-	/**
-	 * Notify search engines of the updated sitemap.
-	 */
-	function ping_search_engines() {
-		$options    = get_option( 'wpseo_xml' );
-		$base       = $GLOBALS['wp_rewrite']->using_index_permalinks() ? 'index.php/' : '';
-		$sitemapurl = urlencode( home_url( $base . 'sitemap_index.xml' ) );
-
-		// Always ping Google and Bing, optionally ping Ask and Yahoo!
-		wp_remote_get( 'http://www.google.com/webmasters/tools/ping?sitemap=' . $sitemapurl );
-		wp_remote_get( 'http://www.bing.com/webmaster/ping.aspx?sitemap=' . $sitemapurl );
-
-		if ( isset( $options['xml_ping_yahoo'] ) && $options['xml_ping_yahoo'] )
-			wp_remote_get( 'http://search.yahooapis.com/SiteExplorerService/V1/updateNotification?appid=3usdTDLV34HbjQpIBuzMM1UkECFl5KDN7fogidABihmHBfqaebDuZk1vpLDR64I-&url=' . $sitemapurl );
-
-		if ( isset( $options['xml_ping_ask'] ) && $options['xml_ping_ask'] )
-			wp_remote_get( 'http://submissions.ask.com/ping?sitemap=' . $sitemapurl );
 	}
 
 	/**

@@ -14,7 +14,7 @@ class ewwwngg {
 
 	/* adds the Bulk Optimize page to the tools menu */
 	function ewww_ngg_bulk_menu () {
-		add_management_page('NextGEN Gallery Bulk Optimize', 'NextGEN Bulk Optimize', 'manage_options', 'ewww-ngg-bulk', array (&$this, 'ewww_ngg_bulk'));
+			add_submenu_page(NGGFOLDER, 'NextGEN Bulk Optimize', 'Bulk Optimize', 'NextGEN Manage gallery', 'ewww-ngg-bulk', array (&$this, 'ewww_ngg_bulk'));
 	}
 	//TODO: add a bulk optimize action to each gallery (when we have a hook)
 	/* ngg_added_new_image hook */
@@ -122,17 +122,23 @@ class ewwwngg {
 				// verify some random person isn't running the bulk optimization
 				if (!wp_verify_nonce( $_REQUEST['_wpnonce'], 'ewww-ngg-bulk' ) || !current_user_can( 'edit_others_posts' ) ) {
 				wp_die( __( 'Cheatin&#8217; eh?' ) );
-				}
+				} ?>
+				<form method="post" action="">If the bulk optimize is interrupted, press
+					<?php wp_nonce_field( 'ewww-ngg-bulk', '_wpnonce'); ?>
+					<input type="hidden" name="resume" value="1">
+					<button type="submit" class="button-secondary action">resume</button>. If the page is still loading, the bulk action is still running.
+				</form>
+				<?php
 				// initialize $current, and $started time
 				$current = 0;
 				$started = time();
 				// find out how many images we have
 				$total = sizeof($images);
 				?>
-				<script type="text/javascript">
+				<!--<script type="text/javascript">
 					document.write('Bulk Optimization has taken <span id="endTime">0.0</span> seconds.');
 					var loopTime=setInterval("currentTime()",100);
-				</script>
+				</script>-->
 				<?php
 				// functions to flush HTML output buffers
 				ob_implicit_flush(true);
@@ -205,19 +211,27 @@ class ewwwngg {
 			$msg = '';
 			// get the file path of the image
 			$file_path = $meta->image->imagePath;
+		        // use finfo functions when available
+			if (function_exists('finfo_file') && defined('FILEINFO_MIME')) {
+				// create a finfo resource
+				$finfo = finfo_open(FILEINFO_MIME);
+				// retrieve the mimetype
+				$type = explode(';', finfo_file($finfo, $file_path));
+				$type = $type[0];
+				finfo_close($finfo);
 			// use getimagesize to find the mimetype
-			if(function_exists('getimagesize')){
+			} elseif (function_exists('getimagesize')) {
 				$type = getimagesize($file_path);
 				if(false !== $type){
 					$type = $type['mime'];
 				}
 			// try mime_content_type to find the mimetype otherwise
-			} elseif(function_exists('mime_content_type')) {
+			} elseif (function_exists('mime_content_type')) {
 				$type = mime_content_type($file_path);
 			// otherwise tell the user we just can't work under these conditions
 			} else {
 				$type = false;
-				$msg = '<br>getimagesize() and mime_content_type() PHP functions are missing';
+				$msg = '<br>missing finfo_file(), getimagesize() and mime_content_type() PHP functions';
 			}
 			// retrieve the human-readable filesize of the image
 			$file_size = ewww_image_optimizer_format_bytes(filesize($file_path));
@@ -272,8 +286,8 @@ class ewwwngg {
 	}
 }
 // initialize the plugin and the class
-add_action( 'init', 'ewwwngg' );
-add_action('admin_print_scripts-tools_page_ewww-ngg-bulk', 'ewww_image_optimizer_scripts' );
+add_action('init', 'ewwwngg');
+//add_action('admin_print_scripts-tools_page_ewww-ngg-bulk', 'ewww_image_optimizer_scripts');
 
 function ewwwngg() {
 	global $ewwwngg;
