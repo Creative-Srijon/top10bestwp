@@ -1,0 +1,5 @@
+// Swap Files 
+*.sw*
+
+// W3TC
+/w3tc
