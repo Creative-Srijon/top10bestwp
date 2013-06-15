@@ -3,14 +3,14 @@
 function ewww_image_optimizer_bulk_preview() {
 	// retrieve the attachment IDs that were pre-loaded in the database
 	$attachments = get_option('ewww_image_optimizer_bulk_attachments');
-// make sure there are some attachments to optimize
+	// make sure there are some attachments to optimize
 	if (count($attachments) < 1) {
 		echo '<p>You don’t appear to have uploaded any images yet.</p>';
-	return;
+		return;
 	}
 ?>
-<div class="wrap"> 
-<div id="icon-upload" class="icon32"><br /></div><h2>Bulk EWWW Image Optimize </h2>
+	<div class="wrap"> 
+	<div id="icon-upload" class="icon32"><br /></div><h2>Bulk EWWW Image Optimize </h2>
 <?php 
 	// Retrieve the value of the 'bulk resume' option and set the button text for the form to use
 	$resume = get_option('ewww_image_optimizer_bulk_resume');
@@ -40,8 +40,7 @@ function ewww_image_optimizer_bulk_preview() {
 				<input type="hidden" name="reset" value="1">
 				<button id="bulk-reset" type="submit" class="button-secondary action">Reset Status</button>
 			</form>
-<?php
-		endif;
+<?php		endif;
 	echo '</div></div>';
 }
 
@@ -89,7 +88,7 @@ function ewww_image_optimizer_bulk_script($hook) {
 	// the excess data from attachments, since we only want the attachment IDs
 	global $wp_version;
 	$my_version = $wp_version;
-	substr($my_version, 0, 3);
+	$my_version = substr($my_version, 0, 3);
 	if ( $my_version < 3.1 ) {
 		$i = 0;
 		foreach( $attachments as $attachment ) {
@@ -101,8 +100,16 @@ function ewww_image_optimizer_bulk_script($hook) {
 	// store the attachment IDs we retrieved in the 'bulk_attachments' option so we can keep track of our progress in the database
 	update_option('ewww_image_optimizer_bulk_attachments', $attachments);
         // load the bulk optimization javascript and dependencies
-	wp_enqueue_script('ewwwbulkscript', plugins_url('/pageload.js', __FILE__), array('jquery', 'jquery-ui-core', 'jquery-ui-widget', 'jquery-ui-progressbar'));
+	// only re-register jquery on old versions of wordpress
+	if ($my_version < 3) {
+		wp_deregister_script('jquery');
+		wp_register_script('jquery', plugins_url('/jquery-1.9.1.min.js', __FILE__), false, '1.9.1');
+	}
+	wp_enqueue_script('ewwwjuiscript', plugins_url('/jquery-ui-1.10.2.custom.min.js', __FILE__), false);
+	wp_enqueue_script('ewwwbulkscript', plugins_url('/eio.js', __FILE__), array('jquery'));
+	//}
 	// submit a couple variables to the javascript to work with
+	$attachments = json_encode($attachments);
 	wp_localize_script('ewwwbulkscript', 'ewww_vars', array(
 			'_wpnonce' => wp_create_nonce('ewww-image-optimizer-bulk'),
 			'attachments' => $attachments
@@ -122,7 +129,7 @@ function ewww_image_optimizer_bulk_initialize() {
 	// update the 'bulk resume' option to show that an operation is in progress
 	update_option('ewww_image_optimizer_bulk_resume', 'true');
 	// generate the WP spinner image for display
-	$loading_image = includes_url('images/wpspin.gif');
+	$loading_image = plugins_url('/wpspin.gif', __FILE__);
 	// let the user know that we are beginning
 	echo "<p>Optimizing&nbsp;<img src='$loading_image' alt='loading'/></p>";
 	die();
@@ -138,7 +145,7 @@ function ewww_image_optimizer_bulk_filename() {
 	$attachment_ID = $_POST['attachment'];
 	$meta = wp_get_attachment_metadata( $attachment_ID );
 	// generate the WP spinner image for display
-	$loading_image = includes_url('images/wpspin.gif');
+	$loading_image = plugins_url('/wpspin.gif', __FILE__);
 	// let the user know that we are beginning
 	echo "<p>Optimizing <b>" . $meta['file'] . "</b>&nbsp;<img src='$loading_image' alt='loading'/></p>";
 	die();
@@ -146,6 +153,7 @@ function ewww_image_optimizer_bulk_filename() {
  
 // called by javascript to process each image in the loop
 function ewww_image_optimizer_bulk_loop() {
+	global $ewww_debug;
 	// verify that an authorized user has started the optimizer
 	if (!wp_verify_nonce( $_REQUEST['_wpnonce'], 'ewww-image-optimizer-bulk' ) || !current_user_can( 'edit_others_posts' ) ) {
 		wp_die( __( 'Cheatin&#8217; eh?' ) );
@@ -182,6 +190,7 @@ function ewww_image_optimizer_bulk_loop() {
 	array_shift($attachments);
 	// store the updated list of attachment IDs back in the 'bulk_attachments' option
 	update_option('ewww_image_optimizer_bulk_attachments', $attachments);
+	if (get_site_option('ewww_image_optimizer_debug')) echo '<div style="background-color:#ffff99;">' . $ewww_debug . '</div>';
 	die();
 }
 

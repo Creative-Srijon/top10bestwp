@@ -1,9 +1,10 @@
 === EWWW Image Optimizer ===
 Contributors: nosilver4u
-Tags: images, image, attachments, attachment
-Requires at least: 2.9
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QFXCW38HE24NY
+Tags: images, image, attachments, attachment, optimize
+Requires at least: 2.8
 Tested up to: 3.5.1
-Stable tag: 1.4.0
+Stable tag: 1.4.4
 License: GPLv3
 
 Reduce file sizes for images within WordPress including NextGEN Gallery and GRAND FlAGallery. Uses jpegtran, optipng/pngout, and gifsicle.
@@ -16,7 +17,7 @@ By default, EWWW Image Optimizer uses lossless optimization techniques, so your 
 
 Images are optimized using the [jpegtran](http://jpegclub.org/jpegtran/), [optipng](http://optipng.sourceforge.net/), [pngout](advsys.net/ken/utils.htm), and [gifsicle](http://www.lcdf.org/gifsicle/) image tools (available for free). For PNG files, either optipng or pngout can be used. If you want the best optimization, install both, set optipng to level 3 (beyond that is just crazy and rarely yields significant gains) and pngout to level 0. Images are converted using the above tools and GD or 'convert' (ImageMagick).
 
-EWWW Image Optimizer calls optimization utilities directly which is better suited to shared hosting situations where these utilities may already be installed. Pre-compiled binaries/executables are provided for optipng, gifsicle, and jpegtran. Pngout can be installed with one-click from the settings page.
+EWWW Image Optimizer calls optimization utilities directly which is well suited to shared hosting situations where these utilities may already be installed. Pre-compiled binaries/executables are provided for optipng, gifsicle, and jpegtran. Pngout can be installed with one-click from the settings page.
 
 **Why use EWWW Image Optimizer?**
 
@@ -30,11 +31,11 @@ EWWW Image Optimizer calls optimization utilities directly which is better suite
 = NextGEN Integration =
 
 Features re-optimization capability, and bulk optimizing. The NextGEN Bulk Optimize function is located near the bottom of the NextGEN menu, and will optimize all images in all galleries.
-NOTE: Does not optimize thumbnails on initial upload, must re-optimize images to optimize thumbnails.
+NOTE: Does not optimize thumbnails on initial upload, 1.4.1+ will provide the option to optimize thumbnails after uploading images.
 
 = GRAND Flash Album Gallery Integration =
 
-Features optimization on upload capability, re-optimization, and bulk optimizing. The Bulk Optimize function is located near the bottom of the FlAGallery menu, and will optimize all images in all galleries.
+Features optimization on upload capability, re-optimization, and bulk optimizing. The Bulk Optimize function is located near the bottom of the FlAGallery menu, and will optimize all images in all galleries. It is also possible to optimize groups of images in a gallery, or multiple galleries at once.
 
 == Installation ==
 
@@ -128,12 +129,45 @@ That's not a question, but since I made it up, I'll answer it. See the Image Opt
 
 == Changelog ==
 
+= future =
+* these are possible future bugfixes and/or feature requests, if you see a feature you like here, go vote for it in the support forum
+* BuddyPress integration
+* SunOS (Solaris/OpenIndiana) support
+
+= 1.4.4 =
+* fixed bulk optimization functions for non-English users in NextGEN
+* fixed bulk action conflict in NextGEN
+
+= 1.4.3 =
+* global configuration for multi-site/network installs
+* prevent loading of bundled jquery on WP versions that don't need it to avoid conflicts with other plugins not doing the 'right thing'
+* removed enqueueing of common.js to make things run quicker
+* fixed hardcoded link for optimizing nextgen thumbs after upload
+* added links in media library for one time conversion of images
+* better error reporting for pngout auto-install
+* no longer alert users of jpegtran update if they are using version 8
+
+= 1.4.2 =
+* fixed fatal errors when posix_getpwuid() is missing from server
+* removed path restrictions, and fixed path detection for old blogs where upload path was modified
+
+= 1.4.1 =
+* FlaGallery and NextGEN Bulk functions are now using ajax functions with nicer progress bars and such
+* NextGEN now has ability to optimize selected galleries, or selected images in bulk (FlaGallery already had it)
+* NextGEN users can now click a button to optimize thumbnails after uploading new images
+* use built-in php mimetype functions to check binaries, saving 'file' command for fallback
+* added donation links, since several folks have expressed interest in contributing financially
+* bundled jquery and jquery-ui for using bulk functions on older WP versions
+* use 32-bit jpegtran binary on 'odd' 64-bit linux servers
+* rewrote debugging functionality, available on bulk operations and settings page
+* increased compatibility back to 2.8 - hope no one is actually using that, but just in case...
+
 = 1.4.0 =
 * fixed bug with missing 'nice' not detected properly
 * added: Windows support, includes gifsicle, optipng, and jpegtran executables
 * added: FreeBSD support, includes gifsicle, optipng, and jpegtran executables
 * rewrote calls to jpegtran to avoid shell-redirection and work in Windows
-* jpegtran is now bundled for all platformsi
+* jpegtran is now bundled for all platforms
 * updated gifsicle to 1.70
 * pngout installer and version updated to February 20-21 2013
 * removed use of shell_exec()
@@ -294,6 +328,10 @@ That's not a question, but since I made it up, I'll answer it. See the Image Opt
 * First release (forked from CW Image Optimizer)
 
 == Upgrade Notice ==
+
+= 1.4.4 =
+
+bugfix release for nextgen users only, everyone else can ignore this release
 
 = 1.4.0 =
 sorry about the accidental release of 1.3.9, use this one instead
